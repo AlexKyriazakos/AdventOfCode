@@ -1,3 +1,3 @@
-# 2020 AdventOfCode solutions in Javascript
+# AdventOfCode solutions in Javascript
 
-https://adventofcode.com/2020
+https://adventofcode.com/
