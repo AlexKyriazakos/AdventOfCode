@@ -29,10 +29,13 @@ fn find_unique_packet(packet: &String, packet_length: usize) -> usize {
 fn main() {
     let file_path = "../2022/input6.txt";
     let lines = lines_from_file(file_path);
-    let line = lines.iter().next().unwrap();
-    let packet_marker = find_unique_packet(line, 4);
-    let message_marker = find_unique_packet(line, 14);
 
-    println!("Part 1: {packet_marker}");
-    println!("Part 2: {message_marker}");
+    for line in lines {
+        let packet_marker = find_unique_packet(&line, 4);
+        println!("Packet: {:?} Marker: {:?}", line, packet_marker);
+
+        let message_marker = find_unique_packet(&line, 14);
+        println!("Part 1: {packet_marker}");
+        println!("Part 2: {message_marker}");
+    }
 }
