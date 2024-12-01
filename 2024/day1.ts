@@ -1,59 +1,46 @@
 import fs from "fs";
-import path from "path";
 
-function solve(inputPath) {
+// const numberSort = (a: string, b: string) => Number(a) - Number(b);
+
+const parseInput = (inputPath) => {
   const input = fs.readFileSync(inputPath, { encoding: "utf-8" }).trim();
 
-  const data = input.split(/\r?\n/).reduce((acc, line) => {
-    return line.split(/\s+/);
-  });
+  const data = input.split(/\r?\n/).reduce(
+    ([listA, listB], line) => {
+      const [a, b] = line.split(/\s+/);
 
-  console.log(data);
+      return [[...listA, Number(a)].sort(), [...listB, Number(b)].sort()];
+    },
+    [[], []] as number[][]
+  );
 
-  // const sum = data.reduce((s, v) => (s += v), 0);
+  return data;
+};
 
-  // return sum;
+function solve(inputPath) {
+  const data = parseInput(inputPath);
+
+  const [listA, listB] = data;
+
+  const distances = listA.map((v, i) => Math.abs(v - listB[i]));
+
+  const sum = distances.reduce((s, v) => (s += v), 0);
+
+  return sum;
 }
 
 function solveTwo(inputPath) {
-  const input = fs.readFileSync(inputPath, { encoding: "utf-8" }).trim();
-  //   const input = `two1nine
-  //   eightwothree
-  //   abcone2threexyz
-  //   xtwone3four
-  //   4nineeightseven2
-  //   zoneight234
-  //   7pqrstsixteen
-  //   oneight`;
-  const numbers = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-  ];
-  const numberMap = numbers.reduce((obj, c, i) => {
-    obj[c] = i + 1;
-    return obj;
-  }, {});
-  const RE = new RegExp(`(?=(${numbers.join("|")}|\\d)+?)`, "g");
+  const data = parseInput(inputPath);
 
-  const data = input.split(/\r?\n/).map((value, i) => {
-    const matches = [...value.matchAll(RE)];
-    const firstExtractedDigit = matches[0][1];
-    const secondExtractedDigit = matches[matches.length - 1][1];
+  const [listA, listB] = data;
 
-    const firstDigit = numberMap[firstExtractedDigit] ?? firstExtractedDigit;
-    const secondDigit = numberMap[secondExtractedDigit] ?? secondExtractedDigit;
-    if (i < 50) console.log(value, Number(`${firstDigit}${secondDigit}`));
-    return Number(`${firstDigit}${secondDigit}`);
-  });
+  const listBCounts = listB.reduce((acc, v) => {
+    acc[v] = (acc[v] ?? 0) + 1;
+    return acc;
+  }, {} as Record<number, number>);
 
-  const sum = data.reduce((s, v) => (s += v), 0);
+  const similarities = listA.map((v) => v * (listBCounts[v] ?? 0));
+  const sum = similarities.reduce((s, v) => (s += v), 0);
 
   return sum;
 }
@@ -61,8 +48,8 @@ function solveTwo(inputPath) {
 const demoResult = solve("day1-demo-input.txt");
 console.log("Part 1 demo input result:", demoResult);
 
-// const inputResult = solve("day1-input.txt");
-// console.log("Part 1 result:", inputResult);
+const inputResult = solve("day1-input.txt");
+console.log("Part 1 result:", inputResult);
 
-// const inputResult2 = solveTwo("day1-input.txt");
-// console.log("Part 2 result:", inputResult2);
+const inputResult2 = solveTwo("day1-input.txt");
+console.log("Part 2 result:", inputResult2);
