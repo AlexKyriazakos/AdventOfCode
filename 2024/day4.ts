@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
+import { PathOrFileDescriptor, readFileSync } from "fs";
 
-const parseInput = (inputPath) => {
+const parseInput = (inputPath: PathOrFileDescriptor) => {
   const input = readFileSync(inputPath, { encoding: "utf-8" }).trim();
 
   const data = input.split(/\r?\n/).map((line) => line.split(""));
@@ -93,7 +93,7 @@ const checkAllDirections = (x: number, y: number, arr: string[][]) => {
   return xmasCount;
 };
 
-function solve(inputPath) {
+function solve(inputPath: PathOrFileDescriptor) {
   const data = parseInput(inputPath);
 
   let totalXmasCount = 0;
@@ -108,7 +108,7 @@ function solve(inputPath) {
   return totalXmasCount;
 }
 
-function solveTwo(inputPath) {
+function solveTwo(inputPath: PathOrFileDescriptor) {
   const data = parseInput(inputPath);
 
   let totalXmasCount = 0;

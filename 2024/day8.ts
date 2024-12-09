@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
+import { PathOrFileDescriptor, readFileSync } from "fs";
 
-const parseInput = (inputPath) => {
+const parseInput = (inputPath: PathOrFileDescriptor) => {
   const input = readFileSync(inputPath, { encoding: "utf-8" }).trim();
 
   const data = input.split(/\r?\n/).map((line) => line.split(""));
@@ -15,7 +15,7 @@ function generateCombinations(
   const result: [number, number][][] = [];
 
   // Helper function to generate combinations
-  function backtrack(start, currentCombo) {
+  function backtrack(start: number, currentCombo: [number, number][]) {
     // If we've reached the desired combination length, add it to results
     if (currentCombo.length === combinationLength) {
       result.push([...currentCombo]);
@@ -116,7 +116,7 @@ const calc3 = (
 
   let result: [number, number][] = [];
 
-  const lineEquation = (x, y) =>
+  const lineEquation = (x: number, y: number) =>
     (y1 - y2) * x + (x2 - x1) * y + (x1 - x2) * y1 + (y2 - y1) * x1;
 
   for (let x = 0; x < arr.length; x++) {
@@ -128,7 +128,7 @@ const calc3 = (
   return result;
 };
 
-function solve(inputPath) {
+function solve(inputPath: string) {
   const data = parseInput(inputPath);
 
   let antennas: Record<string, [number, number][]> = {};
@@ -163,7 +163,7 @@ function solve(inputPath) {
   return uniqueAntinodes.size;
 }
 
-function solveTwo(inputPath) {
+function solveTwo(inputPath: string) {
   const data = parseInput(inputPath);
 
   let antennas: Record<string, [number, number][]> = {};

@@ -1,9 +1,9 @@
-import { readFileSync } from "fs";
+import { Dir, PathOrFileDescriptor, readFileSync } from "fs";
 import { performance } from "node:perf_hooks";
 import { EOL } from "os";
 import { clearLine, cursorTo } from "readline";
 
-const parseInput = (inputPath) => {
+const parseInput = (inputPath: PathOrFileDescriptor) => {
   const input = readFileSync(inputPath, { encoding: "utf-8" }).trim();
 
   const data = input.split(/\r?\n/).map((line) => line.split(""));
@@ -21,28 +21,26 @@ const COLORS = {
 
 const diffs = {
   N: [-1, 0],
-  NE: [-1, 1],
   E: [0, 1],
-  SE: [1, 1],
   S: [1, 0],
-  SW: [1, -1],
   W: [0, -1],
-  NW: [-1, -1],
 } as const satisfies Record<string, [number, number]>;
+
+type Direction = keyof typeof diffs;
 
 const rightTurnDirs = {
   N: "E",
   E: "S",
   S: "W",
   W: "N",
-};
+} satisfies { [K in Direction]: Direction };
 
 const walkGuard = (
   x: number,
   y: number,
   arr: string[][],
-  direction: keyof typeof diffs
-): [number, number, keyof typeof diffs] | null => {
+  direction: Direction
+): [number, number, Direction] | null => {
   const width = arr[0].length - 1;
   const height = arr.length - 1;
 
@@ -84,7 +82,7 @@ const printCell = (cell: string) => {
   }
 };
 const countSteps = async (x: number, y: number, arr: string[][]) => {
-  let direction: keyof typeof diffs = "N";
+  let direction: Direction = "N";
   const visited = new Set([`${x}|${y}`]);
 
   const uniqueSteps = new Set([`${x}|${y}-${direction}`]);
@@ -153,7 +151,7 @@ const countSteps = async (x: number, y: number, arr: string[][]) => {
   return { loop: false, visited };
 };
 
-async function solve(inputPath) {
+async function solve(inputPath: string) {
   const data = parseInput(inputPath);
 
   const x = data.findIndex((x) => x.includes("^"));
@@ -163,12 +161,12 @@ async function solve(inputPath) {
   //   return result.visited.size;
 }
 
-function solveTwo(inputPath) {
+async function solveTwo(inputPath: any) {
   const data = parseInput(inputPath);
 
   const x = data.findIndex((x) => x.includes("^"));
   const y = data[x].indexOf("^");
-  const result = countSteps(x, y, data);
+  const result = await countSteps(x, y, data);
 
   const initialPath = [...result.visited].map((step) =>
     step.split("|").map(Number)
@@ -182,7 +180,7 @@ function solveTwo(inputPath) {
 
     newMap[obsX][obsY] = "#";
 
-    const result = countSteps(x, y, newMap);
+    const result = await countSteps(x, y, newMap);
 
     if (result.loop) obstaclePositions.add(`${obsX}|${obsY}`);
   }
@@ -190,10 +188,10 @@ function solveTwo(inputPath) {
   return obstaclePositions.size;
 }
 
-const demoResult = solve("day6-demo-input.txt");
+// const demoResult = solve("day6-demo-input.txt");
 // console.log("Part 1 demo input result:", demoResult);
 
-// const inputResult = solve("day6-input.txt");
+const inputResult = solve("day6-input.txt");
 // console.log("Part 1 result:", inputResult);
 
 // const demoResult2 = solveTwo("day6-demo-input.txt");

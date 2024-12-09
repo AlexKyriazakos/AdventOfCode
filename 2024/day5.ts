@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
+import { PathOrFileDescriptor, readFileSync } from "fs";
 
-const parseInput = (inputPath) => {
+const parseInput = (inputPath: PathOrFileDescriptor) => {
   const input = readFileSync(inputPath, { encoding: "utf-8" }).trim();
 
   const [rules, updates] = input
@@ -13,7 +13,7 @@ const parseInput = (inputPath) => {
   ];
 };
 
-function solve(inputPath) {
+function solve(inputPath: string) {
   const [rules, updates] = parseInput(inputPath);
 
   let middlePageSum = 0;
@@ -32,7 +32,7 @@ function solve(inputPath) {
   return middlePageSum;
 }
 
-function solveTwo(inputPath) {
+function solveTwo(inputPath: string) {
   const [rules, updates] = parseInput(inputPath);
 
   let correctedMiddlePageSum = 0;
